@@ -30,8 +30,8 @@ server:
 
 app:
   virtual-thread-test:
-    total-test-size: 1000000 # 총 처리 대상 데이터 수
-    chunk-size: 10000 # 청크당 처리 단위 개수 (Spring Batch chunk size)
+    total-test-size: 100000 # 총 처리 대상 데이터 수
+    chunk-size: 100 # 청크당 처리 단위 개수 (Spring Batch chunk size)
     grid-size: 100 # 파티션 수 (= 병렬 처리 스레드 수)
 
     use-partitioner: true # true: 파티셔닝(멀티 쓰레드) 활성화, false: 단일 스레드 실행

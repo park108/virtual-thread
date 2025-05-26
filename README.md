@@ -10,6 +10,8 @@
 
 ## 테스트 방법
 - application.yml 파일 설정으로 테스트를 수행할 수 있다.
+
+### 설정값
 ```application.yml
 app:
   virtual-thread-test:
@@ -23,9 +25,50 @@ app:
     normal-thread-pool-max-size: 100 # 일반 ThreadPool 최대 사이즈
     normal-thread-pool-queue-capacity: 1000 # 일반 ThreadPool 큐 용량
 ```
+### 결과
+- Single-threaded
+```
+🧵 일반 ThreadPoolExecutor 모드 사용
+🧪 테스트 케이스 정보
+   - 총 테스트 건수 (total-test-size): 100,000
+   - 청크 사이즈 (chunk-size): 100
+   - 예상 청크 개수: 1,000개
+✅ 배치 작업 종료: singleChunkJob
+   - 시작 시각: 2025년 05월 26일 18:01:50.366
+   - 종료 시각: 2025년 05월 26일 18:01:53.136
+   - 소요 시간: 0일 00시간 00분 02.770초
+📦 처리된 총 건수: 100,000 건
+```
+- Multi-threaded
+```
+🧵 일반 ThreadPoolExecutor 모드 사용
+🧪 테스트 케이스 정보
+   - 총 테스트 건수 (total-test-size): 100,000
+   - 청크 사이즈 (chunk-size): 100
+   - 예상 청크 개수: 1,000개
+✅ 배치 작업 종료: partitionedChunkJob
+   - 시작 시각: 2025년 05월 26일 18:02:20.880
+   - 종료 시각: 2025년 05월 26일 18:02:22.181
+   - 소요 시간: 0일 00시간 00분 01.301초
+📦 처리된 총 건수: 100,000 건
+```
+- Multi-threaded (virtual thread)
+```
+🚀 Virtual Thread 모드 사용
+🧪 테스트 케이스 정보
+   - 총 테스트 건수 (total-test-size): 100,000
+   - 청크 사이즈 (chunk-size): 100
+   - 예상 청크 개수: 1,000개
+✅ 배치 작업 종료: partitionedChunkJob
+   - 시작 시각: 2025년 05월 26일 18:02:42.259
+   - 종료 시각: 2025년 05월 26일 18:02:43.461
+   - 소요 시간: 0일 00시간 00분 01.202초
+📦 처리된 총 건수: 100,000 건
+```
 
 ## TODO
 - IN/OUT 설정을 통한 실제 성능 테스트
+  - 솔루션들이 개별 서버에서 동작하는 환경에서 Network 비용, I/O 병목을 포함한 테스트를 수행해야 한다. 
   - 대상: DB, Cache, Queue, File
 - Exception handling 전략 추가
   - 전략 유형: Fail Fast, Retry, Skip, DLQ
