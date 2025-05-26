@@ -58,6 +58,8 @@ public class TaskExecutorConfig {
                 executor.setMaxPoolSize(properties.getNormalThreadPoolMaxSize());
                 executor.setQueueCapacity(properties.getNormalThreadPoolQueueCapacity());
                 executor.setThreadNamePrefix("batch-thread-");
+                executor.setWaitForTasksToCompleteOnShutdown(true);
+                executor.setAwaitTerminationSeconds(30);
                 executor.initialize();
 
                 System.out.println("🧩 Partitioning 활성화 + 🧵 일반 ThreadPoolExecutor 모드 사용");
@@ -74,6 +76,8 @@ public class TaskExecutorConfig {
             executor.setMaxPoolSize(1);
             executor.setQueueCapacity(properties.getNormalThreadPoolQueueCapacity());
             executor.setThreadNamePrefix("batch-thread-");
+            executor.setWaitForTasksToCompleteOnShutdown(true);
+            executor.setAwaitTerminationSeconds(30);
             executor.initialize();
 
             System.out.println("🧮 Partitioning 미사용 → 단일 스레드 모드");

@@ -13,24 +13,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class SingleItemReaderImpl implements ItemStreamReader<Integer> {
 
-    private final VirtualThreadTestProperties properties;
-
-    private final AtomicInteger index = new AtomicInteger();
-    private final int start;
     private int current;
     private final int end;
 
     /**
      * Chunk Size 를 단일 스레드에서 처리
-     *
      */
     public SingleItemReaderImpl(VirtualThreadTestProperties properties) {
 
-        this.properties = properties;
-
-        this.start = properties.getChunkSize() * index.get();
-        this.current = this.start;
-        this.end = Math.max(this.start + properties.getChunkSize(), properties.getTotalTestSize());
+        AtomicInteger index = new AtomicInteger();
+        int start = properties.getChunkSize() * index.get();
+        this.current = start;
+        this.end = Math.max(start + properties.getChunkSize(), properties.getTotalTestSize());
 
         // TODO: Cache에서 데이터 읽기 (예: Hazelcast, Redis, Altibase)
 

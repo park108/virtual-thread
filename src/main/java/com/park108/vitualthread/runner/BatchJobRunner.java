@@ -44,5 +44,8 @@ public class BatchJobRunner implements CommandLineRunner {
                 : jobLauncher.run(singleChunkJob, params);
 
         System.out.println("▶▶▶ 배치 잡 실행 완료: " + execution.getStatus());
+
+        // ✅ 명시적으로 애플리케이션 종료
+        System.exit(0);
     }
 }

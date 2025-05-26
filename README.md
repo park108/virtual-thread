@@ -1,4 +1,6 @@
-# Virtual Thread Test in Spring Batch (updated at 26/may/2025)
+# Virtual Thread Test in Spring Batch
+(updated at 26/may/2025)
+
 ## 프로젝트의 목적
 - Spring Batch의 성능 향상을 위해 다양한 처리 방식을 테스트하고 비교한다.
   - Single Threaded
