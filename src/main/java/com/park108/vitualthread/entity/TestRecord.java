@@ -6,13 +6,21 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "record")
+@Table(
+        name = "record",
+        indexes = @Index(
+                name = "idx_sequence",
+                columnList = "jobExecutionId, sequence"
+        )
+)
 public class TestRecord {
 
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID", updatable = false, nullable = false)
     private UUID id;
+
+    private Long jobExecutionId;
 
     private Integer sequence;
 
@@ -23,7 +31,12 @@ public class TestRecord {
     // 생성자, getter, setter 생략 (롬복 써도 무방)
     public TestRecord() {}
 
-    public TestRecord(Integer sequence, String threadName, LocalDateTime processedAt) {
+    public TestRecord(Long jobExecutionId,
+                      Integer sequence,
+                      String threadName,
+                      LocalDateTime processedAt
+    ) {
+        this.jobExecutionId = jobExecutionId;
         this.sequence = sequence;
         this.threadName = threadName;
         this.processedAt = processedAt;

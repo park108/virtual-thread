@@ -22,7 +22,7 @@ public class SingleItemReaderImpl implements ItemStreamReader<Integer> {
     public SingleItemReaderImpl(VirtualThreadTestProperties properties) {
 
         AtomicInteger index = new AtomicInteger();
-        int start = properties.getChunkSize() * index.get();
+        int start = properties.getChunkSize() * index.getAndIncrement();
         this.current = start;
         this.end = Math.max(start + properties.getChunkSize(), properties.getTotalTestSize());
 
@@ -35,8 +35,6 @@ public class SingleItemReaderImpl implements ItemStreamReader<Integer> {
         // TODO: 파일에서 데이터 읽기
 
         // TODO: 예외 처리 전략 추가 (e.g. Skip, Retry, FaultTolerance)
-
-        index.getAndIncrement();
     }
 
     @Override

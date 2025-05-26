@@ -62,12 +62,13 @@ public class JobExecutionListenerImpl implements JobExecutionListener {
         System.out.println("🧪 테스트 케이스 정보");
         System.out.println("   - 총 테스트 건수 (total-test-size): " + String.format("%,d", properties.getTotalTestSize()));
         System.out.println("   - 청크 사이즈 (chunk-size): " + String.format("%,d", properties.getChunkSize()));
-        System.out.println("   - 예상 청크 개수: " + (properties.getTotalTestSize() / properties.getChunkSize()) + "개");
+        System.out.println("   - 예상 청크 개수: " + String.format("%,d", properties.getTotalTestSize() / properties.getChunkSize()) + "개");
 
         System.out.println("✅ 배치 작업 종료: " + jobExecution.getJobInstance().getJobName());
-        System.out.println("⏱ 시작 시각: " + formatKoreanTimestamp(startTime));
-        System.out.println("⏱ 종료 시각: " + formatKoreanTimestamp(endTime));
-        System.out.println("⏱ 총 소요 시간: " + formatElapsedTime(elapsed));
+        System.out.println("   - 시작 시각: " + formatKoreanTimestamp(startTime));
+        System.out.println("   - 종료 시각: " + formatKoreanTimestamp(endTime));
+        System.out.println("   - 소요 시간: " + formatElapsedTime(elapsed));
+
         System.out.println("📦 처리된 총 건수: " + String.format("%,d", writeCount) + " 건");
     }
 
