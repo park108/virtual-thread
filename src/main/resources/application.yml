@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 120  # 👈 grid-size 보다 크거나 같게
+      minimum-idle: 10
+      idle-timeout: 60000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create  # 또는 create-drop, update
+
+  sql:
+    init:
+      mode: never
+      schema-locations: classpath:schema-h2.sql
+
+server:
+  port: 8080
+
+app:
+  virtual-thread-test:
+    total-test-size: 1000000 # 총 처리 대상 데이터 수
+    chunk-size: 10000 # 청크당 처리 단위 개수 (Spring Batch chunk size)
+    grid-size: 100 # 파티션 수 (= 병렬 처리 스레드 수)
+
+    use-partitioner: true # true: 파티셔닝(멀티 쓰레드) 활성화, false: 단일 스레드 실행
+    use-virtual-thread: true # true: Virtual Thread 사용, false: 일반 ThreadPoolExecutor 사용
+    normal-thread-pool-min-size: 50 # 일반 ThreadPool 최소 사이즈
+    normal-thread-pool-max-size: 100 # 일반 ThreadPool 최대 사이즈
+    normal-thread-pool-queue-capacity: 1000 # 일반 ThreadPool 큐 용량
+
+#logging:
+#  level:
+#    org.springframework.batch: DEBUG
+#    org.springframework.batch.core.step.AbstractStep: DEBUG
