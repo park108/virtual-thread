@@ -38,7 +38,7 @@ public class ItemWriterImpl implements ItemWriter<TestRecord> {
         repository.saveAll(items);
 
         // 처리 로그 출력 (스레드 확인용)
-        System.out.println("📝 Write " + String.format("%,d", items.size()) + " records at 🧵"
+        System.out.println("✍\uFE0F Write " + String.format("%,d", items.size()) + " records at 🧵"
                 + Thread.currentThread().getName());
     }
 }

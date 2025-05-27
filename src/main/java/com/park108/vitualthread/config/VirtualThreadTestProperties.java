@@ -7,18 +7,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.virtual-thread-test")
 public class VirtualThreadTestProperties {
 
-    private boolean usePartitioner;
     private int totalTestSize;
     private int chunkSize;
     private int gridSize;
+    private int mockReadMinLatency;
+    private int mockReadMaxLatency;
+
+    private boolean usePartitioner;
     private boolean useVirtualThread;
 
     private int normalThreadPoolMinSize;
     private int normalThreadPoolMaxSize;
     private int normalThreadPoolQueueCapacity;
-
-    public boolean isUsePartitioner() { return usePartitioner; }
-    public void setUsePartitioner(boolean usePartitioner) { this.usePartitioner = usePartitioner; }
 
     public int getTotalTestSize() { return totalTestSize; }
     public void setTotalTestSize(int totalTestSize) { this.totalTestSize = totalTestSize; }
@@ -28,6 +28,15 @@ public class VirtualThreadTestProperties {
 
     public int getGridSize() { return gridSize; }
     public void setGridSize(int gridSize) { this.gridSize = gridSize; }
+
+    public int getMockReadMinLatency() { return mockReadMinLatency; }
+    public void setMockReadMinLatency(int mockReadMinLatency) { this.mockReadMinLatency = mockReadMinLatency; }
+
+    public int getMockReadMaxLatency() { return mockReadMaxLatency; }
+    public void setMockReadMaxLatency(int mockReadMaxLatency) { this.mockReadMaxLatency = mockReadMaxLatency; }
+
+    public boolean isUsePartitioner() { return usePartitioner; }
+    public void setUsePartitioner(boolean usePartitioner) { this.usePartitioner = usePartitioner; }
 
     public boolean isUseVirtualThread() { return useVirtualThread; }
     public void setUseVirtualThread(boolean useVirtualThread) { this.useVirtualThread = useVirtualThread; }

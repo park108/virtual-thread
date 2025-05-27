@@ -2,9 +2,7 @@ package com.park108.vitualthread.job;
 
 import com.park108.vitualthread.config.VirtualThreadTestProperties;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -86,13 +84,25 @@ public class PartitionedItemReaderImpl implements ItemStreamReader<Integer> {
         // 조회 할 건 없으면 빈 리스트 리턴
         if(list.isEmpty()) return list;
 
-        // TODO: 청크 읽기 지연 속도 설정 - 실제 인프라 연결 된 후 삭제할 것
+        // TODO: 청크 읽기 지연 테스트 - 실제 인프라 연결 된 후 삭제할 것
+        sleepTest();
+
+        System.out.println("\uD83D\uDCD6 Read chunk #" + chunkNo
+                + " at 🧵" + Thread.currentThread().getName()
+                + " : " + String.format("%,d", startOffset)
+                + " ~ " + String.format("%,d", endOffset)
+        );
+
+        return list;
+    }
+
+    private void sleepTest() {
         try {
 
             // min ~ max 랜덤 정수
             Random random = new Random();
-            int min = 1000;
-            int max = 1000;
+            int min = properties.getMockReadMinLatency();
+            int max = properties.getMockReadMaxLatency();
 
             int randomNumber = random.nextInt((max - min) + 1) + min;
 
@@ -101,11 +111,14 @@ public class PartitionedItemReaderImpl implements ItemStreamReader<Integer> {
         catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        System.out.println("📝 Read chunk " + String.format("%,d", startOffset)
-                + " ~ " + String.format("%,d", endOffset)
-                + " at 🧵" + Thread.currentThread().getName());
+    private void calculateTest() {
 
-        return list;
+        long dummy = 0;
+
+        for (int i = 0; i < 100_000_000; i++) {
+            dummy += (long) Math.sqrt(i);
+        }
     }
 }
