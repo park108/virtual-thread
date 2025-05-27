@@ -45,7 +45,7 @@ public class BatchPartitioner implements Partitioner {
 
             // 각 파티션의 처리 범위 계산
             int start = i * chunkSize;
-            int end = (i == gridSize - 1) ? totalTestSize : start + chunkSize;
+            int end = (i == gridSize - 1) ? totalTestSize - 1 : start + chunkSize - 1;
             String partitionKey = "partition-" + i;
 
             // 🎯 파티션 범위 출력
