@@ -32,11 +32,12 @@ app:
   virtual-thread-test:
     total-test-size: 1000000 # 총 처리 대상 데이터 수
     chunk-size: 10000 # 청크당 처리 단위 개수 (Spring Batch chunk size)
-    grid-size: 100 # 파티션 수 (= 병렬 처리 스레드 수)
     mock-read-min-latency: 6400 # mock 읽기 시간 최소 ms
     mock-read-max-latency: 12800 # mock 읽기 시간 최대 ms
 
     use-partitioner: true # true: 파티셔닝(멀티 쓰레드) 활성화, false: 단일 스레드 실행
+    grid-size: 100 # 파티션 수 (= 병렬 처리 스레드 수)
+
     use-virtual-thread: true # true: Virtual Thread 사용, false: 일반 ThreadPoolExecutor 사용
     normal-thread-pool-min-size: 100 # 일반 ThreadPool 최소 사이즈
     normal-thread-pool-max-size: 200 # 일반 ThreadPool 최대 사이즈

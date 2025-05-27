@@ -70,8 +70,16 @@ public class PartitionedItemReaderImpl implements ItemStreamReader<Integer> {
         list = new ArrayList<>();
         index = 0;
 
+        // TODO: Cache에서 데이터 읽기 (예: Hazelcast, Redis, Altibase)
 
-        // TODO: 데이터 소스 별 구현 로직 필요
+        // TODO: RDB에서 데이터 읽기 (예: Oracle, PostgreSQL/EDB)
+
+        // TODO: 이벤트 소스에서 읽기 (예: Kafka, IBM MQ)
+
+        // TODO: 파일에서 데이터 읽기
+
+        // TODO: 예외 처리 전략 추가 (e.g. Skip, Retry, FaultTolerance)
+
         // 데이터 설정
         int startOffset = start + chunkNo * chunkSize;
         int nextOffset = startOffset + chunkSize;

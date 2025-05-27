@@ -7,24 +7,63 @@ import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @StepScope
 @Component
 public class SingleItemReaderImpl implements ItemStreamReader<Integer> {
 
-    private int current;
+    private final VirtualThreadTestProperties properties;
+    List<Integer> list;
+
+    private final int start;
     private final int end;
+
+    private int chunkNo;
+    private int index;
 
     /**
      * Chunk Size 를 단일 스레드에서 처리
      */
     public SingleItemReaderImpl(VirtualThreadTestProperties properties) {
 
-        AtomicInteger index = new AtomicInteger();
-        int start = properties.getChunkSize() * index.getAndIncrement();
-        this.current = start;
-        this.end = Math.max(start + properties.getChunkSize(), properties.getTotalTestSize());
+        this.properties = properties;
+
+        // 파티션 범위 설정
+        this.start = 0;
+        this.end = properties.getTotalTestSize();
+
+        this.chunkNo = 0;
+        this.index = 0;
+    }
+
+    @Override
+    public Integer read() {
+
+        // 조회한 목록이 없거나 모두 읽어서 처리했을 경우 다음 청크 조회
+        if(null == list || index >= list.size()) {
+            list = getChunk(start, end, chunkNo, properties.getChunkSize());
+            ++chunkNo; // 청크 번호 증가
+        }
+
+        // 마지막 건을 처리했을 경우 빈 리스트라서 읽기 종료
+        if(list.isEmpty()) return null;
+
+        return list.get(index++);
+    }
+
+    /**
+     * 청크 크기대로 데이터 조회
+     * @return
+     */
+    private List<Integer> getChunk(int start, int end, int chunkNo, int chunkSize) {
+
+        // 데이터와 인덱스 초기화
+        list = new ArrayList<>();
+        index = 0;
 
         // TODO: Cache에서 데이터 읽기 (예: Hazelcast, Redis, Altibase)
 
@@ -35,31 +74,45 @@ public class SingleItemReaderImpl implements ItemStreamReader<Integer> {
         // TODO: 파일에서 데이터 읽기
 
         // TODO: 예외 처리 전략 추가 (e.g. Skip, Retry, FaultTolerance)
-    }
 
-    @Override
-    public Integer read() {
-        if (current < end) {
-            return current++;
+        // 데이터 설정
+        int startOffset = start + chunkNo * chunkSize;
+        int nextOffset = startOffset + chunkSize;
+        int endOffset = Math.min(nextOffset - 1, end);
+
+        for(int i = startOffset; i <= endOffset; i++) {
+            list.add(i);
         }
-        else {
-            return null;
+
+        // 조회 할 건 없으면 빈 리스트 리턴
+        if(list.isEmpty()) return list;
+
+        // TODO: 청크 읽기 지연 테스트 - 실제 인프라 연결 된 후 삭제할 것
+        sleepTest();
+
+        System.out.println("\uD83D\uDCD6 Read chunk #" + chunkNo
+                + " at 🧵" + Thread.currentThread().getName()
+                + " : " + String.format("%,d", startOffset)
+                + " ~ " + String.format("%,d", endOffset)
+        );
+
+        return list;
+    }
+
+    private void sleepTest() {
+        try {
+
+            // min ~ max 랜덤 정수
+            Random random = new Random();
+            int min = properties.getMockReadMinLatency();
+            int max = properties.getMockReadMaxLatency();
+
+            int randomNumber = random.nextInt((max - min) + 1) + min;
+
+            Thread.sleep(randomNumber);
         }
-    }
-
-    @Override
-    public void open(ExecutionContext executionContext) throws ItemStreamException {
-        // Step 실행 시 최초 1회 호출됨
-        // 필요 시 이전 상태 복원 가능 (e.g. current 값 불러오기)
-    }
-
-    @Override
-    public void update(ExecutionContext executionContext) throws ItemStreamException {
-    }
-
-    @Override
-    public void close() throws ItemStreamException {
-        // Step 종료 시 호출됨
-        // 자원 해제 및 정리 작업 수행 위치
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
